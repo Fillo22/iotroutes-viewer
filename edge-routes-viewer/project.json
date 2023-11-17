@@ -1,0 +1,83 @@
+{
+  "name": "edge-routes-viewer",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "edge-routes-viewer/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/edge-routes-viewer",
+        "index": "edge-routes-viewer/src/index.html",
+        "baseHref": "/",
+        "main": "edge-routes-viewer/src/main.tsx",
+        "tsConfig": "edge-routes-viewer/tsconfig.app.json",
+        "assets": [
+          "edge-routes-viewer/src/favicon.ico",
+          "edge-routes-viewer/src/assets"
+        ],
+        "styles": [],
+        "scripts": [],
+        "isolatedConfig": true,
+        "webpackConfig": "edge-routes-viewer/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "edge-routes-viewer/src/environments/environment.ts",
+              "with": "edge-routes-viewer/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "edge-routes-viewer:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "edge-routes-viewer:build:development"
+        },
+        "production": {
+          "buildTarget": "edge-routes-viewer:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["edge-routes-viewer/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "edge-routes-viewer/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
