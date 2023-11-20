@@ -1,0 +1,26 @@
+{
+  "name": "@iotroutes-viewer/iotedge-routes-viewer-vsc",
+  "displayName": "HelloWorld",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.83.0"
+  },
+  "main": "./extension.js",
+  "extensionKind": [
+		"ui",
+		"workspace"
+	],
+  "contributes": {
+    "customEditors": [
+			{
+				"viewType": "iotedge-routes.viewer",
+				"displayName": "IoT Edge Routes Viewer",
+				"selector": [
+					{
+						"filenamePattern": "*.template.json"
+					}
+				]
+			}]
+  }
+}

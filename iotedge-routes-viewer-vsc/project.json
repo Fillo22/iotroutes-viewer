@@ -1,0 +1,40 @@
+{
+  "name": "iotedge-routes-viewer-vsc",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "iotedge-routes-viewer-vsc/src",
+  "projectType": "library",
+  "implicitDependencies": [
+    "edge-routes-viewer"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        
+        "outputPath": "dist/iotedge-routes-viewer-vsc",
+        "tsConfig": "iotedge-routes-viewer-vsc/tsconfig.lib.json",
+        "packageJson": "iotedge-routes-viewer-vsc/package.json",
+        "main": "iotedge-routes-viewer-vsc/src/extension.ts",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "iotedge-routes-viewer-vsc/media",
+            "output": "/media"
+          }
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "iotedge-routes-viewer-vsc/**/*.ts",
+          "iotedge-routes-viewer-vsc/package.json"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

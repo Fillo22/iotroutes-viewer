@@ -10,7 +10,7 @@
       "defaultConfiguration": "production",
       "options": {
         "compiler": "babel",
-        "outputPath": "dist/edge-routes-viewer",
+        "outputPath": "iotedge-routes-viewer-vsc/media",
         "index": "edge-routes-viewer/src/index.html",
         "baseHref": "/",
         "main": "edge-routes-viewer/src/main.tsx",
