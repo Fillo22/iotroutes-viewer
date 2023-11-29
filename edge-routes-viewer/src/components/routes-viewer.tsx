@@ -106,6 +106,7 @@ export function RoutesViewer(props: RoutesViewerProps) {
               } ${d.inTopic ? `[${d.inTopic}]` : ''}`
           )
           .attr('font-family', 'Arial')
+          .attr('class', "code")
       )
       .on('mouseover', highlight)
       .on('mouseout', restore);
@@ -162,8 +163,7 @@ export function RoutesViewer(props: RoutesViewerProps) {
         g
           .append('text')
           .text((d) => d.name)
-          .attr('fill', (d) => (d.kind === 'MISSING' ? '#ccc' : 'black'))
-          .attr('font-family', 'Arial')
+          .attr('class', (d) => (d.kind === 'MISSING' ? 'label-missing' : 'label'))
       );
 
     function highlight(

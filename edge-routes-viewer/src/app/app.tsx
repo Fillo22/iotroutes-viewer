@@ -16,10 +16,9 @@ export function App() {
 }
 
 export default App;
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore 
-const vscode = acquireVsCodeApi();
+const vscode = window["acquireVsCodeApi"] !== undefined ?  acquireVsCodeApi() : undefined;
 
 const Wrapper = () => {
   const [dataLoaded, setDataLoaded] = useState<IDeviceTemplate>();
@@ -41,7 +40,7 @@ const Wrapper = () => {
       }
     });
      // Handle messages sent from the extension to the webview
-     vscode.postMessage({ type: 'ready' });
+     vscode?.postMessage({ type: 'ready' });
 
   }, []);
   return (

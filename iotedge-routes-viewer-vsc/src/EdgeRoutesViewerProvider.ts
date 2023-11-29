@@ -33,7 +33,7 @@ export class EdgeRoutesViewerProvider
       ],
     };
     
-        
+    //vscode.workspace.openTextDocument());
     const index = join(this.context.extensionPath, 'media/index.html');
 
     const matchLinks = /(href|src)="([^"]*)"/g;

@@ -3,26 +3,22 @@
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "iotedge-routes-viewer-vsc/src",
   "projectType": "library",
-  "implicitDependencies": [
-    "edge-routes-viewer"
-  ],
+  "implicitDependencies": ["edge-routes-viewer"],
   "targets": {
-    "build": {
+    "build": {     
+      "command": "echo build",
+      "dependsOn": ["copy-file"]     
+    },
+    "build-tsc": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
+      "dependsOn": ["^build"],
       "options": {
-        
         "outputPath": "dist/iotedge-routes-viewer-vsc",
         "tsConfig": "iotedge-routes-viewer-vsc/tsconfig.lib.json",
         "packageJson": "iotedge-routes-viewer-vsc/package.json",
         "main": "iotedge-routes-viewer-vsc/src/extension.ts",
-        "assets": [
-          {
-            "glob": "**/*",
-            "input": "iotedge-routes-viewer-vsc/media",
-            "output": "/media"
-          }
-        ]
+        "assets": []
       }
     },
     "lint": {
@@ -33,6 +29,14 @@
           "iotedge-routes-viewer-vsc/**/*.ts",
           "iotedge-routes-viewer-vsc/package.json"
         ]
+      }
+    },
+    "copy-file": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-tsc", "^build"],
+      "outputs": [],
+      "options": {
+        "command": "node ./tools/copy-file.js ./dist/edge-routes-viewer ./dist/iotedge-routes-viewer-vsc/media"
       }
     }
   },

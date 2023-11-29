@@ -1,0 +1,12 @@
+.code {
+    color: var(--vscode-editor-foreground);
+}
+
+.label {
+    fill: var(--vscode-editor-foreground);
+    font-family: var(--vscode-editor-font-family);
+}
+.label-missing {
+    fill: '#ccc';
+    font-family: var(--vscode-editor-font-family);
+}

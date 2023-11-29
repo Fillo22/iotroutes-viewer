@@ -1,15 +1,43 @@
 {
     "version": "2.0.0",
-    "tasks": [{
-      "type": "npm",
-      "script": "watch",
-      "isBackground": true,
-      "presentation": {
-        "reveal": "never"
+    "tasks": [
+      {
+        "type": "npm",
+        "script": "watch",
+        "isBackground": true,
+        "presentation": {
+          "reveal": "never"
+        },
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
       },
-      "group": {
-        "kind": "build",
-        "isDefault": true
+      {
+        "label": "xxx-edge-routes-viewer",
+        "type": "shell",
+        "command": "npx nx serve edge-routes-viewer --port=4200 --watch=true",
+        "isBackground": true,
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "presentation": {
+          "reveal": "always"
+        }
+      },
+      {
+        "type": "nx",
+        "project": "",
+        "command": "run",
+        "positional": "edge-routes-viewer:serve --port=4200 --watch=true",
+        "flags": [],
+        "problemMatcher": [], 
+        "label": "edge-routes-viewer",
+        "isBackground": true,
+        "presentation": {
+          "reveal": "always"
+        },
       }
-    }]
+    ]
   }

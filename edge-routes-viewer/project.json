@@ -10,14 +10,15 @@
       "defaultConfiguration": "production",
       "options": {
         "compiler": "babel",
-        "outputPath": "iotedge-routes-viewer-vsc/media",
+        "outputPath": "dist/edge-routes-viewer",
         "index": "edge-routes-viewer/src/index.html",
         "baseHref": "/",
         "main": "edge-routes-viewer/src/main.tsx",
         "tsConfig": "edge-routes-viewer/tsconfig.app.json",
         "assets": [
           "edge-routes-viewer/src/favicon.ico",
-          "edge-routes-viewer/src/assets"
+          "edge-routes-viewer/src/assets",
+          "edge-routes-viewer/src/style.css"
         ],
         "styles": [],
         "scripts": [],
