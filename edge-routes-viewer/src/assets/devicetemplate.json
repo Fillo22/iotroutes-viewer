@@ -1,0 +1,426 @@
+{
+  "$schema-template": "2.0.0",
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": "",
+            "registryCredentials": {
+              "serviziambientali": {
+                "username": "x",
+                "password": "xxx",
+                "address": ".azurecr.io"
+              }
+            }
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "createOptions": {}
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "createOptions": {
+                "HostConfig": {
+                  "PortBindings": {
+                    "5671/tcp": [
+                      {
+                        "HostPort": "5671"
+                      }
+                    ],
+                    "8883/tcp": [
+                      {
+                        "HostPort": "8883"
+                      }
+                    ],
+                    "443/tcp": [
+                      {
+                        "HostPort": "443"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "modules": {
+          "AzureBlobStorageonIoTEdgeToIoTHub": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azure-blob-storage:latest",
+              "createOptions": {
+                "Env": [
+                  "LOCAL_STORAGE_ACCOUNT_NAME=x",
+                  "LOCAL_STORAGE_ACCOUNT_KEY=",
+                  "deviceToCloudUploadProperties_uploadOn=true",
+                  "deviceToCloudUploadProperties_uploadOrder=OldestFirst",
+                  "deviceToCloudUploadProperties_cloudStorageConnectionString=DefaultEndpointsProtocol=https;AccountName=",
+                  "deviceToCloudUploadProperties_storageContainersForUpload_predictions_target=predictions",
+                  "deviceToCloudUploadProperties_deleteAfterUpload=true"
+                ],
+                "HostConfig": {
+                  "Binds": [
+                    "C:\\ContainerData:/BlobRoot"
+                  ],
+                  "PortBindings": {
+                    "11002/tcp": [
+                      {
+                        "HostPort": "11002"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "MainGatewayEdgeModule": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULEDIR<../MainGatewayEdgeModule>.debug}",
+              "createOptions": {}
+            }
+          },
+          "GPSEdgeModule": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "env": {
+              "GPS_portPath": {
+                "value": "127.0.0.1:9591"
+              },
+              "GPS_portKind": {
+                "value": "tcp"
+              },
+              "GPS_baudRate": {
+                "value": "115200"
+              },
+              "GPS_readTimeout": {
+                "value": "1000"
+              },
+              "GPS_loop": {
+                "value": "false"
+              },
+              "GPS_openNmeaRetryTimeout": {
+                "value": "5000"
+              },
+          
+              "GPS_geofenceCache:retryTime": {
+                "value": 2000
+              },
+              "GPS_geofenceCache:blobName": {
+                "value": "geofences/coordinates.json"
+              },
+              "GPS_Logging:LogLevel:Default": {
+                "value": "Information"
+              }
+            },
+            "settings": {
+              "image": "${MODULEDIR<../GPSEdgeModule>.debug}",
+              "createOptions": {
+                "HostConfig": {
+                  "Privileged": "true",
+                  "Devices": [
+                    {
+                      "PathOnHost": "/dev/ttyUSB1",
+                      "PathInContainer": "/dev/ttyUSB1",
+                      "CgroupPermissions": "rwm"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "FMSCanBusEdgeModule": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "env": {
+              "FMS_portPath": {
+                "value": "127.0.0.1:9590"
+              },
+              "FMS_portKind": {
+                "value": "tcp"
+              },
+              "FMS_baudRate": {
+                "value": "9600"
+              },
+              "FMS_readTimeout": {
+                "value": "1000"
+              },
+              "FMS_loop": {
+                "value": "true"
+              },
+              "FMS_openCamRetryTimeout": {
+                "value": "5000"
+              },
+              "FMS_fmsParser": {
+                "value": "analyzer_bin"
+              },
+              "FMS_Logging:LogLevel:Default": {
+                "value": "Information"
+              },
+              "FMS_mqttBusService:url": {
+                "value": "eclipse_mosquitto"
+              },
+              "FMS_mqttBusService:port": {
+                "value": "1883"
+              }
+            },
+            "settings": {
+              "image": "${MODULEDIR<../FMSCanBusEdgeModule>.debug}",
+              "createOptions": {
+                "HostConfig": {
+                  "Privileged": "true",
+                  "Devices": [
+                    {
+                      "PathOnHost": "/dev/opt/5",
+                      "PathInContainer": "/dev/opt/5",
+                      "CgroupPermissions": "rwm"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "RFID_EdgeModule": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "env": {
+              "BB_connectRetryTimeout": {
+                "value": 2000
+              },
+              "BB_ipAddress": {
+                "value": "127.0.0.1"
+              },
+              "BB_port": {
+                "value": "9592"
+              },
+              "BB_proxyServer:port": {
+                "value": "3000"
+              },
+              "BB_proxyServer:enable": {
+                "value": "true"
+              },
+              "BB_proxyServer:init": {
+                "value": "false"
+              },
+              "BB_Logging:LogLevel:Default": {
+                "value": "Information"
+              }
+            },
+            "settings": {
+              "image": "${MODULEDIR<../RFID_EdgeModule>.debug}",
+              "createOptions": {
+                "ExposedPorts": {
+                  "3000/tcp": {}
+                },
+                "HostConfig": {
+                  "PortBindings": {
+                    "3000/tcp": [
+                      {
+                        "HostPort": "3000"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "AnalisysEdgeModule": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULEDIR<../AnalisysEdgeModule>.debug}",
+              "createOptions": {}
+            },
+            "env": {
+            
+              "WA_storageAccount:blobContainerName": {
+                "value": "predictions"
+              },
+              "WA_QualityDetection:url": {
+                "value": "http://AI_VideoAnalysis:90"
+              },
+              "WA_ipCamera:topCameraUrl": {
+                "value": "http://127.0.0.1:9596"
+              },
+              "WA_ipCamera:sourceDriver": {
+                "value": "OpenCV"
+              },
+              "WA_ipCamera:pauseAfterTimeout": {
+                "value": "120"
+              },
+              "WA_ipCamera:playOnStart": {
+                "value": false
+              },
+              "WA_ipCamera:connectionRetryTimeout": {
+                "value": 5000
+              },
+              "WA_ipCamera:savePredictionsToCloud": {
+                "value": true
+              },
+             
+              "WA_TAGCache:cachePlasticBlobName": {
+                "value": "tags/plastictags.csv"
+              },
+              "WA_TAGCache:retryTime": {
+                "value": "2000"
+              },
+              "WA_Quality:windowTimeSpan": {
+                "value": "20"
+              },
+              "WA_Quality:intervalTimeSpan": {
+                "value": "1"
+              },
+              "WA_Quality:skipDetectionModule": {
+                "value": "false"
+              },
+              "WA_Quality:detectTag": {
+                "value": "false"
+              },
+              "WA_Quality:delayToCapture": {
+                "value": "30.0"
+              },
+              "WA_videoConfiguration:imageWidth": {
+                "value": "800"
+              },
+              "WA_videoConfiguration:imageHight": {
+                "value": "600"
+              },
+              "WA_tripManager:tripTimeValidity": {
+                "value": "2"
+              }
+            }
+          },
+          "LogAPIEdgeModule": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "env": {
+              "ASPNETCORE_ENVIRONMENT": {
+                "value": "Development"
+              },
+             
+              "LOG_Logging:LogLevel:Default": {
+                "value": "Debug"
+              },
+              "LOG_moveTimer": {
+                "value": "2"
+              }
+            },
+            "settings": {
+              "image": "${MODULEDIR<../LogAPIEdgeModule>.debug}",
+              "createOptions": {
+                "ExposedPorts": {
+                  "8080/tcp": {}
+                },
+                "HostConfig": {
+                  "PortBindings": {
+                    "8080/tcp": [
+                      {
+                        "HostPort": "8080"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "GPIOVirtualPortEdgeModule": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULEDIR<../GPIOVirtualPortEdgeModule>.debug}",
+              "createOptions": {}
+            }
+          },
+          "ASAGPIOEdgeModule": {
+            "version": "1.0.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULEDIR<../ASAGPIOEdgeModule>.debug}",
+              "createOptions": {}
+            }
+          }
+        }
+      }
+    },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "routes": {
+          "FMSCanBusEdgeModule_to_MainGateway": "FROM /messages/modules/FMSCanBusEdgeModule/outputs/FMS INTO BrokeredEndpoint(\"/modules/MainGatewayEdgeModule/inputs/FMS\")",
+          "FMSCanBusEdgeModule_to_VideoAnalysisEdgeModule": "FROM /messages/modules/FMSCanBusEdgeModule/outputs/FMS INTO BrokeredEndpoint(\"/modules/VideoAnalysisEdgeModule/inputs/FMS\")",
+          "GEO_FENCEEdgeModule_to_AnalisysEdgeModule": "FROM /messages/modules/GPSEdgeModule/outputs/GEO_FENCE INTO BrokeredEndpoint(\"/modules/AnalisysEdgeModule/inputs/GEO_FENCE\")",
+          "GEO_FENCEEdgeModule_to_MainGateway": "FROM /messages/modules/GPSEdgeModule/outputs/GEO_FENCE INTO BrokeredEndpoint(\"/modules/MainGatewayEdgeModule/inputs/GEO_FENCE\")",
+          "GPSEdgeModule_to_MainGateway": "FROM /messages/modules/GPSEdgeModule/outputs/GPS INTO BrokeredEndpoint(\"/modules/MainGatewayEdgeModule/inputs/GPS\")",
+          "GPSEdgeModule_to_AnalisysEdgeModule": "FROM /messages/modules/GPSEdgeModule/outputs/GPS INTO BrokeredEndpoint(\"/modules/AnalisysEdgeModule/inputs/GPS\")",
+          "GPSEdgeModule_to_VideoAnalysisEdgeModule": "FROM /messages/modules/GPSEdgeModule/outputs/GPS INTO BrokeredEndpoint(\"/modules/VideoAnalysisEdgeModule/inputs/GPS\")",
+          "MainGateway_TAG_to_AnalisysEdgeModule": "FROM /messages/modules/MainGatewayEdgeModule/outputs/TAG INTO BrokeredEndpoint(\"/modules/AnalisysEdgeModule/inputs/TAG\")",
+          "MainGateway_TAG_to_IoTHub": "FROM /messages/modules/MainGatewayEdgeModule/outputs/TAG INTO $upstream",
+          "MainGateway_TAG_to_VideoAnalysisEdgeModule": "FROM /messages/modules/MainGatewayEdgeModule/outputs/TAG INTO BrokeredEndpoint(\"/modules/VideoAnalysisEdgeModule/inputs/TAG\")",
+          "MainGateway_GPS_BATCH_to_IoTHub": "FROM /messages/modules/MainGatewayEdgeModule/outputs/GPS_BATCH INTO $upstream",
+          "MainGateway_FMS_BATCH_to_IoTHub": "FROM /messages/modules/MainGatewayEdgeModule/outputs/FMS_BATCH INTO $upstream",
+          "RFID_to_MainGateway": "FROM /messages/modules/RFID_EdgeModule/outputs/RFID INTO BrokeredEndpoint(\"/modules/MainGatewayEdgeModule/inputs/RFID\")",
+          "AnalisysEdgeModule_to_IoTHub": "FROM /messages/modules/AnalisysEdgeModule/outputs/_QUALITY INTO $upstream",
+          "VideoAnalysisEdgeModule_BIN_DETECTION_to_AnalisysEdgeModule": "FROM /messages/modules/VideoAnalysisEdgeModule/outputs/BIN_DETECTION INTO BrokeredEndpoint(\"/modules/AnalisysEdgeModule/inputs/BIN_DETECTION\")",
+          "MainGateway_IOT_CENTRAL_to_IoTHub": "FROM /messages/modules/MainGatewayEdgeModule/outputs/IOT_CENTRAL INTO $upstream",
+          "ASAGPIOEdgeModuleToIoTHub": "FROM /messages/modules/ASAGPIOEdgeModule/outputs/* INTO $upstream"
+        },
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    },
+    "AzureBlobStorageonIoTEdgeToIoTHub": {
+      "properties.desired": {
+        "deviceAutoDeleteProperties": {
+          "deleteOn": true,
+          "deleteAfterMinutes": 5,
+          "retainWhileUploading": true
+        },
+        "deviceToCloudUploadProperties": {
+          "uploadOn": true,
+          "uploadOrder": "OldestFirst",
+          "cloudStorageConnectionString": "",
+          "storageContainersForUpload": {
+            "predictions": {
+              "target": "predictions"
+            }
+          },
+          "deleteAfterUpload": true
+        }
+      }
+    }
+  }
+}

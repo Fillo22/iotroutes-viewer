@@ -30,7 +30,7 @@
         "type": "nx",
         "project": "",
         "command": "run",
-        "positional": "edge-routes-viewer:serve --port=4200 --watch=true",
+        "positional": "edge-routes-viewer:serve:development-local --port=4200 --watch=true",
         "flags": [],
         "problemMatcher": [], 
         "label": "edge-routes-viewer",

@@ -18,7 +18,8 @@
         "assets": [
           "edge-routes-viewer/src/favicon.ico",
           "edge-routes-viewer/src/assets",
-          "edge-routes-viewer/src/style.css"
+          "edge-routes-viewer/src/style.css",
+          "edge-routes-viewer/src/assets/devicetemplate.json"
         ],
         "styles": [],
         "scripts": [],
@@ -56,6 +57,9 @@
         "hmr": true
       },
       "configurations": {
+        "development-local": {
+          "buildTarget": "edge-routes-viewer:build:development"
+        },
         "development": {
           "buildTarget": "edge-routes-viewer:build:development"
         },

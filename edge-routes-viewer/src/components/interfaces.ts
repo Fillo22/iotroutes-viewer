@@ -1,3 +1,9 @@
+export interface IState {
+  current: "idle" | "loading" | "error";
+  error?: string | undefined;
+  data?: IDeviceTemplate | undefined;
+}
+
 export interface IModulesContent {
   $edgeAgent: {
     "properties.desired": {
