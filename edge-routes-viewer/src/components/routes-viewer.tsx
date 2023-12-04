@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import * as d3 from 'd3';
-import { useEffect } from 'react';
-import { IDeviceTemplate, ILink, IModule } from './interfaces';
+import { useEffect, useState } from 'react';
+import { IDeviceTemplate, ILink, IModule, IRoute } from './interfaces';
 import {
   getLinkedNodes,
   getLinks,
   processDeviceTemplate,
 } from './deviceTemplate';
+import RoutesEditor from './routesEditor';
 
 /* eslint-disable-next-line */
 export interface RoutesViewerProps {
@@ -21,7 +22,8 @@ const StyledRoutesViewer = styled.div`
 
 export function RoutesViewer(props: RoutesViewerProps) {
   const { deviceTemplate, width } = props;
-
+  const [modules, setModules] = useState<IModule[]>([]);
+  const [routes, setRoutes] = useState<IRoute[]>([]);
   const radius = { min: 20, max: 50 };
   const margin = radius.max * 2 + 20;
   let ref!: SVGSVGElement;
@@ -31,7 +33,9 @@ export function RoutesViewer(props: RoutesViewerProps) {
     d3.select(ref).selectAll('*').remove();
     if (!deviceTemplate) return;
 
-    const [modules, routes] = processDeviceTemplate(deviceTemplate);
+    const [m, r] = processDeviceTemplate(deviceTemplate);
+    setModules(m);
+    setRoutes(r);
     const links = getLinks(modules, routes);
 
     // remove children
@@ -238,6 +242,8 @@ export function RoutesViewer(props: RoutesViewerProps) {
   }, [deviceTemplate]);
 
   return (
+    <>
+    
     <StyledRoutesViewer>
       <svg
         width={props.width}
@@ -246,6 +252,8 @@ export function RoutesViewer(props: RoutesViewerProps) {
         ref={(r: SVGSVGElement) => (ref = r)}
       />
     </StyledRoutesViewer>
+    <RoutesEditor modules={modules} routes={routes}></RoutesEditor>
+    </>
   );
 }
 

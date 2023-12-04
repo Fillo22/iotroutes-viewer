@@ -22,7 +22,7 @@ export default App;
 const vscode = window["acquireVsCodeApi"] !== undefined ?  acquireVsCodeApi() : undefined;
 if(process.env.NX_USE_LOCAL_FILE === 'true'){
   // load local file
-  fetch('assets/notvalid.json', {method: 'GET'})
+  fetch('assets/devicetemplate.json', {method: 'GET'})
   .then(async (response) => {
     if(response.ok)
       window.postMessage({type: 'update', text: await response.text()}, '*');
